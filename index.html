@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+
+<html lang="hi">
+
+<head>
+
+<meta charset="utf-8" />
+
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+
+<title>स्वतंत्रता दिवस — Storytelling Through Coding</title>
+
+<style>
+
+:root{
+
+  --saffron:#ff9933; --white:#ffffff; --green:#138808; --ink:#0b3b6f;
+
+  --btn:#0b5ed7; --btn-hover:#094ab0;
+
+}
+
+*{box-sizing:border-box}
+
+body{
+
+  margin:0;
+
+  font-family: "Segoe UI", Roboto, "Noto Sans", Arial, sans-serif;
+
+  background: linear-gradient(180deg,#fff4ea 0%,#ffffff 40%,#e7ffef 100%);
+
+  color:#111;
+
+  -webkit-font-smoothing:antialiased;
+
+}
+
+header{
+
+  padding:14px;
+
+  background:rgba(11,94,215,0.12);
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  flex-wrap:wrap;
+
+  gap:10px;
+
+}
+
+.left-head {display:flex; flex-direction:column}
+
+h1{margin:0;font-size:1.05rem}
+
+.meta { color:#333; font-size:0.9rem }
+
+.flag-wrap{
+
+  width:360px; max-width:92%; margin:18px auto; perspective:600px;
+
+}
+
+.flag{
+
+  width:100%; border-radius:10px; overflow:hidden;
+
+  box-shadow:0 10px 24px rgba(0,0,0,0.12);
+
+  transform-origin:left center; animation:wave 2.6s ease-in-out infinite;
+
+  border:2px solid rgba(0,0,0,0.06);
+
+}
+
+.band{
+
+  height:50px; display:flex; align-items:center; justify-content:center;
+
+}
+
+.saffron{ background:var(--saffron) }
+
+.white{ background:var(--white); position:relative; }
+
+.green{ background:var(--green) }
+
+.chakra{
+
+  width:48px; height:48px; border-radius:50%;
+
+  border:3px solid var(--ink); position:absolute; top:50%; left:50%;
+
+  transform:translate(-50%,-50%);
+
+  display:flex; align-items:center; justify-content:center;
+
+}
+
+.chakra .spoke{
+
+  position:absolute; width:2px; height:18px; background:var(--ink);
+
+  transform-origin:center -3px;
+
+}
+
+@keyframes wave{
+
+  0%{transform:rotate(0) translateX(0)}
+
+  50%{transform:rotate(1.5deg) translateX(2px)}
+
+  100%{transform:rotate(0) translateX(0)}
+
+}
+
+@media (max-width:520px){
+
+  .band{height:40px} 
+
+  .chakra{width:40px;height:40px} 
+
+  .chakra .spoke{height:15px}
+
+}
+
+.container{ width:92%; max-width:900px; margin:12px auto 40px; }
+
+.card{ background:rgba(255,255,255,0.95); border-radius:12px; padding:16px; box-shadow:0 10px 30px rgba(0,0,0,0.06); margin-bottom:14px }
+
+#story-box{ min-height:140px; font-size:1.05rem; line-height:1.6; text-align:left; padding:10px }
+
+.controls{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:12px }
+
+button{ padding:10px 18px; border:none; border-radius:8px; background:var(--btn); color:#fff; font-weight:700; cursor:pointer; min-width:120px;
+
+       box-shadow:0 4px 10px rgba(11,94,215,0.12); transition:transform .12s, background .12s }
+
+button.secondary{ background:#6c757d; box-shadow:0 4px 10px rgba(0,0,0,0.08) }
+
+button.success{ background:#198754; box-shadow:0 4px 10px rgba(25,135,84,0.12) }
+
+button:hover{ transform:translateY(-3px); background:var(--btn-hover) }
+
+button.secondary:hover{ background:#565e64 }
+
+button.success:hover{ background:#146c43 }
+
+.note { color:#444; font-size:0.92rem; text-align:center; margin-top:8px }
+
+.quiz-list .qwrap{ margin-bottom:10px }
+
+.quiz-q{ font-weight:700; margin:6px 0 }
+
+.opt{ display:block; padding:10px; border-radius:8px; border:1px solid #e6e6e6; margin:6px 0; cursor:pointer; background:#fff }
+
+.opt input{ margin-right:8px }
+
+#quiz-result{ font-weight:700; margin-top:10px; text-align:center }
+
+#confetti-canvas{ position:fixed; left:0; top:0; width:100%; height:100%; pointer-events:none; z-index:9999 }
+
+footer{ text-align:center; padding:18px; color:#333; font-size:0.95rem }
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+  <div class="left-head">
+
+    <h1>गवर्नमेंट सीनियर सेकेंडरी स्कूल, तेहनदेसर, चुरु</h1>
+
+    <div class="meta">Student: <strong>Tanisha Kanwar</strong> • Class: <strong>10th</strong></div>
+
+  </div>
+
+  <div>
+
+    <button id="playBtn">Play Music ▶</button>
+
+    <button id="pauseBtn" class="secondary">Pause ⏸</button>
+
+  </div>
+
+</header>
+
+<div class="flag-wrap">
+
+  <div class="flag" role="img" aria-label="Indian flag">
+
+    <div class="band saffron"></div>
+
+    <div class="band white">
+
+      <div class="chakra" id="chakra"></div>
+
+    </div>
+
+    <div class="band green"></div>
+
+  </div>
+
+</div>
+
+<div class="container">
+
+  <div class="card">
+
+    <div id="story-box">नीचे "Next" दबाकर कहानी शुरू करें — भारत के स्वतंत्रता संग्राम के प्रमुख पड़ाव दिखेंगे।</div>
+
+    <div class="controls">
+
+      <button id="prevBtn" class="secondary">⟵ Previous</button>
+
+      <button id="nextBtn">Next ⟶</button>
+
+      <button id="restartBtn" class="secondary">Restart 🔄</button>
+
+      <button id="aboutBtn" class="success">About (हिन्दी)</button>
+
+    </div>
+
+    <div class="note">Use ← / → keys for navigation; press R to restart</div>
+
+  </div>
+
+  <div class="card" id="quiz-card">
+
+    <h3>📝 Independence Day Quiz — 5 प्रश्न</h3>
+
+    <div id="quiz" class="quiz-list"></div>
+
+    <div class="controls">
+
+      <button id="submitQuiz" class="success">Submit</button>
+
+      <button id="resetQuiz" class="secondary">Reset</button>
+
+    </div>
+
+    <div id="quiz-result"></div>
+
+  </div>
+
+</div>
+
+<canvas id="confetti-canvas"></canvas>
+
+<footer>Happy Independence Day — जय हिन्द! 🇮🇳</footer>
+
+<audio id="anthem" src="anthem.mp3" loop></audio>
+
+<script>
+
+// Chakra spokes
+
+(function makeSpokes(){
+
+  const c = document.getElementById('chakra');
+
+  for(let i=0;i<24;i++){
+
+    const s = document.createElement('div');
+
+    s.className = 'spoke';
+
+    s.style.transform = 'rotate(' + (i*15) + 'deg)';
+
+    c.appendChild(s);
+
+  }
+
+})();
+
+// Story
+
+const story = [
+
+  "1857 — पहला स्वतंत्रता संग्राम: ब्रिटिश शासन के खिलाफ बड़ा विद्रोह।",
+
+  "1885 — भारतीय राष्ट्रीय कांग्रेस की स्थापना: देश के नेताओं ने साझा मंच पाया।",
+
+  "1919 — जलियाँवाला बाग: इस घटना ने आज़ादी की भावना में नये विवेक को जन्म दिया।",
+
+  "1930 — दांडी मार्च (नमक सत्याग्रह): सत्याग्रह और अहिंसा की शक्ति दिखी।",
+
+  "1942 — भारत छोड़ो आंदोलन: 'करो या मरो' जैसा जनआंदोलन।",
+
+  "15 अगस्त 1947 — भारत स्वतंत्र हुआ! हमें अपने शहीदों का सम्मान करना चाहिए।"
+
+];
+
+let idx = 0;
+
+const box = document.getElementById('story-box');
+
+function showIndex(i){
+
+  if(i < 0) { box.innerText = "कहानी शुरू करने के लिए Next दबाएँ।"; idx=0; return;}
+
+  if(i < story.length) box.innerText = story[i];
+
+  else box.innerHTML = "<b>Jai Hind! 🇮🇳</b> — अब क्विज़ शुरू करें।";
+
+}
+
+document.getElementById('nextBtn').addEventListener('click', ()=>{
+
+  idx++;
+
+  showIndex(idx);
+
+});
+
+document.getElementById('prevBtn').addEventListener('click', ()=>{
+
+  idx--;
+
+  showIndex(idx);
+
+});
+
+document.getElementById('restartBtn').addEventListener('click', ()=>{
+
+  idx=0; showIndex(idx);
+
+});
+
+document.getElementById('aboutBtn').addEventListener('click', ()=>{
+
+  box.innerText = "स्वतंत्रता दिवस (15 अगस्त) भारत की आज़ादी, बलिदान और एकता का उत्सव है। हमें अपने स्वतंत्रता सेनानियों का सम्मान करना चाहिए।";
+
+});
+
+document.addEventListener('keydown', e=>{
+
+  if(e.key==='ArrowRight') document.getElementById('nextBtn').click();
+
+  if(e.key==='ArrowLeft') document.getElementById('prevBtn').click();
+
+  if(e.key.toLowerCase()==='r') document.getElementById('restartBtn').click();
+
+});
+
+// Audio controls
+
+const anthem = document.getElementById('anthem');
+
+const playBtn = document.getElementById('playBtn');
+
+const pauseBtn = document.getElementById('pauseBtn');
+
+playBtn.addEventListener('click', async ()=>{
+
+  try{ await anthem.play(); playBtn.innerText='Playing ▶'; } 
+
+  catch(e){ alert('ब्राउज़र ने ऑटो-प्ले ब्लॉक कर दिया — एक बार पेज पर क्लिक करें।'); }
+
+});
+
+pauseBtn.addEventListener('click', ()=>{
+
+  anthem.pause(); playBtn.innerText='Play Music ▶';
+
+});
+
+// Quiz
+
+const questions = [
+
+  { q: "भारत ने आज़ादी कब प्राप्त की?", options:["26 जनवरी 1950","15 अगस्त 1947","2 अक्टूबर 1869"], ans:1 },
+
+  { q: "दांडी मार्च किस आंदोलन से जुड़ा है?", options:["नमक सत्याग्रह","स्वदेशी आंदोलन","असहयोग आंदोलन"], ans:0 },
+
+  { q: "भारत छोड़ो आंदोलन किस वर्ष शुरू हुआ?", options:["1919","1930","1942"], ans:2 },
+
+  { q: "जलियाँवाला बाग हत्याकांड किस शहर में हुआ?", options:["कोलकाता","अमृतसर","लखनऊ"], ans:1 },
+
+  { q: "अशोक चक्र में कितनी तीलियाँ होती हैं?", options:["24","16","12"], ans:0 }
+
+];
+
+const quizDiv = document.getElementById('quiz');
+
+function renderQuiz(){
+
+  quizDiv.innerHTML='';
+
+  questions.forEach((item,i)=>{
+
+    const wrap=document.createElement('div');
+
+    wrap.className='qwrap';
+
+    wrap.innerHTML='<div class="quiz-q">'+(i+1)+'. '+item.q+'</div>'
+
+      + item.options.map((op,j)=>`<label class="opt"><input type="radio" name="q${i}" value="${j}"> ${op}</label>`).join('');
+
+    quizDiv.appendChild(wrap);
+
+  });
+
+}
+
+renderQuiz();
+
+document.getElementById('submitQuiz').addEventListener('click', ()=>{
+
+  let score=0;
+
+  questions.forEach((item,i)=>{
+
+    const chosen=document.querySelector(`input[name="q${i}"]:checked`);
+
+    if(chosen && parseInt(chosen.value,10)===item.ans) score++;
+
+  });
+
+  document.getElementById('quiz-result').innerText=`आपका स्कोर: ${score} / ${questions.length}`;
+
+  if(score>=3) launchConfetti();
+
+});
+
+document.getElementById('resetQuiz').addEventListener('click', ()=>{
+
+  document.querySelectorAll('#quiz input[type=radio]').forEach(r=>r.checked=false);
+
+  document.getElementById('quiz-result').innerText='';
+
+});
+
+// Confetti
+
+const confettiCanvas=document.getElementById('confetti-canvas');
+
+confettiCanvas.width=window.innerWidth;
+
+confettiCanvas.height=window.innerHeight;
+
+const ctx=confettiCanvas.getContext('2d');
+
+let confettiPieces=[];
+
+function random(min,max){return Math.random()*(max-min)+min;}
+
+function createConfetti(count=120){
+
+  confettiPieces=[];
+
+  const colors=['#FF5733','#FFC300','#DAF7A6','#28A745','#0B3B6F','#FF33A8'];
+
+  for(let i=0;i<count;i++){
+
+    confettiPieces.push({
+
+      x:random(0,confettiCanvas.width),
+
+      y:random(-confettiCanvas.height,0),
+
+      w:random(6,12), h:random(8,18),
+
+      color:colors[Math.floor(random(0,colors.length))],
+
+      rot:random(0,360), velY:random(2,6), velX:random(-2,2), rotSpeed:random(-5,5)
+
+    });
+
+  }
+
+}
+
+let confettiAnim;
+
+function drawConfetti(){
+
+  ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+
+  confettiPieces.forEach(p=>{
+
+    ctx.save();
+
+    ctx.translate(p.x,p.y);
+
+    ctx.rotate(p.rot*Math.PI/180);
+
+    ctx.fillStyle=p.color;
+
+    ctx.fillRect(-p.w/2,-p.h/
